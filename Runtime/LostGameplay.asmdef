@@ -1,0 +1,22 @@
+{
+    "name": "LostGameplay",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8e683a3d6d1f7a74da811ef5727a2526"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "Unity",
+            "expression": "0.0.0",
+            "define": "UNITY"
+        }
+    ],
+    "noEngineReferences": false
+}

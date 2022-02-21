@@ -1,0 +1,13 @@
+{
+  "name": "com.lostsignal.lostgameplay",
+  "displayName": "Lost Gameplay",
+  "version": "0.1.0",
+  "unity": "2021.1",
+  "description": "Lost Gameplay",
+  "keywords": [
+    "Lost Gameplay"
+  ],
+  "category": "",
+  "dependencies": {},
+  "type": "library"
+}
