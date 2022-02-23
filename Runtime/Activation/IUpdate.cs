@@ -8,6 +8,8 @@ namespace Lost
 {
     public interface IUpdate
     {
+        int Order { get; }
+
         void OnUpdate(float deltaTime);
     }
 }

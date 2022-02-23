@@ -7,6 +7,7 @@
 namespace Lost
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Lost
         private static bool isProcessing;
 
         #pragma warning disable 0649
-        [SerializeField] private double maxActivationTimeInMillis = 0.1;
+        [SerializeField] private double maxActivationTimeInMillis = 0.5;
         #pragma warning restore 0649
 
         private Queue<MonoBehaviour> monoBehaviours = new Queue<MonoBehaviour>(1000);
@@ -32,6 +33,8 @@ namespace Lost
         private List<IUpdate> runningUpdates = new List<IUpdate>(100);
         private List<ILateUpdate> runningLateUpdates = new List<ILateUpdate>(100);
         private List<IFixedUpdate> runningFixedUpdates = new List<IFixedUpdate>(100);
+
+        private bool updatesNeedReorder;
 
         public bool IsProcessing => isProcessing;
 
@@ -78,6 +81,13 @@ namespace Lost
             if (isProcessing)
             {
                 this.ProcessActivationRequests();
+            }
+
+            if (this.updatesNeedReorder)
+            {
+                //// TODO [bgish]: Do Better, this is temp
+                this.runningUpdates = this.runningUpdates.OrderBy(x => x.Order).ToList();
+                this.updatesNeedReorder = false;
             }
 
             float deltaTime = Time.deltaTime;
@@ -159,6 +169,7 @@ namespace Lost
                     if (update != null)
                     {
                         this.runningUpdates.Add(update);
+                        this.updatesNeedReorder = true;
                     }
                 }
                 else if (this.lateUpdates.Count > 0)

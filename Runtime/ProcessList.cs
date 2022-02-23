@@ -54,20 +54,21 @@ namespace Lost
 
         public void Remove(int id)
         {
-            if (this.idToIndexMap.TryGetValue(id, out int lastIndexId) == false)
+            if (this.idToIndexMap.TryGetValue(id, out int indexToRemove) == false)
             {
                 return;
             }
 
             int lastIndex = this.count - 1;
-            int indexToRemove = this.idToIndexMap[id];
 
             if (indexToRemove != lastIndex)
             {
                 this.items[indexToRemove] = this.items[lastIndex];
-                this.ids[indexToRemove] = this.ids[lastIndex];
                 this.contexts[indexToRemove] = this.contexts[lastIndex];
-                this.idToIndexMap[lastIndexId] = indexToRemove;
+                
+                int lastIndexesId = this.ids[lastIndex];
+                this.ids[indexToRemove] = lastIndexesId;
+                this.idToIndexMap[lastIndexesId] = indexToRemove;
             }
 
             this.items[lastIndex] = default;
@@ -84,9 +85,14 @@ namespace Lost
 
         public void RunAllOverXSeconds(float deltaTime, float seconds)
         {
-            if (deltaTime == 0.0f)
+            if (deltaTime < 0.001f)
             {
-                return;
+                deltaTime = 0.001f;
+            }
+
+            if (seconds < 0.001f)
+            {
+                seconds = 0.001f;
             }
 
             double framesPerSecond = 1.0f / deltaTime;
@@ -108,6 +114,11 @@ namespace Lost
 
         private void Run(int maxElements, double maxRuntimeInSeconds)
         {
+            if (this.count == 0)
+            {
+                return;
+            }
+
             this.OnBeforeProcess();
 
             double endTimeInSeconds = Time.realtimeSinceStartupAsDouble + maxRuntimeInSeconds;
@@ -115,8 +126,6 @@ namespace Lost
 
             for (int i = 0; i < maxElements; i++)
             {
-                this.currentIndex = (this.currentIndex + 1) % this.count;
-
                 try
                 {
                     this.Process(ref this.items[this.currentIndex]);
@@ -126,6 +135,8 @@ namespace Lost
                     Debug.LogError($"ProcessList {this.name} caught an exception.", this.contexts[this.currentIndex]);
                     Debug.LogException(ex, this.contexts[this.currentIndex]);
                 }
+
+                this.currentIndex = (this.currentIndex + 1) % this.count;
 
                 if (Time.realtimeSinceStartupAsDouble >= endTimeInSeconds)
                 {

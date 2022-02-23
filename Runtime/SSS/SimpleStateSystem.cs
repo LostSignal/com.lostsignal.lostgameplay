@@ -9,6 +9,7 @@
 namespace Lost
 {
     using System.Collections.Generic;
+    using System.Linq;
     using SSS;
     using UnityEngine;
 
@@ -23,6 +24,21 @@ namespace Lost
 #pragma warning restore 0649
 
         public List<State> States => this.states;
+
+        // TODO [bgish]: This needs to be completely redone, it's only making sure SSS system is working
+        public void SetState(string stateName)
+        {
+            var state = this.states.FirstOrDefault(x => x.Name == stateName);
+
+            if (state != null)
+            {
+                foreach (var action in state.Actions)
+                {
+                    action.StateStarted();
+                    action.StateUpdated(1.0f);
+                }
+            }
+        }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Called By Unity")]
         private void OnValidate()

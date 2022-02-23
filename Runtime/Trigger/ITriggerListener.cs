@@ -1,15 +1,15 @@
 //-----------------------------------------------------------------------
-// <copyright file="IPlayerProximityListener.cs" company="Lost Signal LLC">
+// <copyright file="ITriggerListener.cs" company="Lost Signal LLC">
 //     Copyright (c) Lost Signal LLC. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 
 namespace Lost
 {
-    public interface IPlayerProximityListener
+    public interface ITriggerListener
     {
-        void OnPlayerEnterProximity();
+        void OnPlayerEnterTrigger();
 
-        void OnPlayerExitProximity();
+        void OnPlayerExitTrigger();
     }
 }

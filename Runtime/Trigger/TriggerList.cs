@@ -1,22 +1,18 @@
 //-----------------------------------------------------------------------
-// <copyright file="PlayerProximityList.cs" company="Lost Signal">
-//     Copyright (c) Lost Signal. All rights reserved.
+// <copyright file="TriggerList.cs" company="Lost Signal LLC">
+//     Copyright (c) Lost Signal LLC. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
 
-#if UNITY
-
 namespace Lost
 {
-    using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public sealed class PlayerProximityList : ProcessList<PlayerProximityItem>
+    public sealed class TriggerList : ProcessList<TriggerItem>
     {
         private Vector3 playerPosition;
 
-        public PlayerProximityList(string name, int capacity)
-            : base(name, capacity)
+        public TriggerList(string name, int capacity) : base(name, capacity)
         {
         }
 
@@ -25,8 +21,7 @@ namespace Lost
             this.playerPosition = ActorManager.Instance.MainPlayerPosition;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override void Process(ref PlayerProximityItem item)
+        protected override void Process(ref TriggerItem item)
         {
             if (item.IsDynamic)
             {
@@ -38,16 +33,14 @@ namespace Lost
             if (item.IsInitialized == false)
             {
                 item.IsInitialized = true;
-                item.IsInProximity = isInside;
-                item.PlayerProximity.UpdateState(isInside);
+                item.HasEntered = isInside;
+                item.Trigger.UpdateState(isInside);
             }
-            else if (item.IsInProximity != isInside)
+            else if (item.HasEntered != isInside)
             {
-                item.IsInProximity = isInside;
-                item.PlayerProximity.UpdateState(isInside);
+                item.HasEntered = isInside;
+                item.Trigger.UpdateState(isInside);
             }
         }
     }
 }
-
-#endif

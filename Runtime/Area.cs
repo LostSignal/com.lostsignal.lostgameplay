@@ -50,5 +50,27 @@ namespace Lost
                 throw new NotImplementedException($"{nameof(Area)} IsInside encountered unknown {nameof(AreaType)} {this.Type}");
             }
         }
+
+        public void Draw(Transform transform, Area area, Color color)
+        {
+            #if UNITY_EDITOR
+
+            Gizmos.color = color;
+
+            if (area.Type == AreaType.Sphere)
+            {
+                Gizmos.DrawWireSphere(transform.position, area.Size.x * transform.lossyScale.x);
+            }
+            else if (area.Type == AreaType.Cylinder)
+            {
+                GizmosUtil.DrawWireCylinder(transform, area.Size.x, area.Size.y);
+            }
+            else if (area.Type == AreaType.Box)
+            {
+                GizmosUtil.DrawWireCube(transform, area.Size);
+            }
+
+            #endif
+        }
     }
 }
