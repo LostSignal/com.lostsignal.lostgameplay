@@ -16,11 +16,18 @@ namespace Lost.SSS
 #pragma warning disable 0649
         [SerializeField] private string description;
         [SerializeField] private float delayBeforeStart;
+        [SerializeField] private bool isLoopingState;
 #pragma warning restore 0649
 
         public string Description => this.description;
 
         public abstract string DisplayName { get; }
+
+        public bool IsLoopingState
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => this.isLoopingState;
+        }
 
         public float DelayBeforeStart
         {
@@ -34,12 +41,25 @@ namespace Lost.SSS
             get => this.delayBeforeStart;
         }
 
-        public virtual void OnValidate()
+        public virtual bool OnValidate()
         {
+            return false;
         }
 
         public abstract void StateStarted();
 
-        public abstract void StateUpdated(float progress);
+        public virtual void Update(float currentTime)
+        {
+            if (currentTime < this.delayBeforeStart)
+            {
+                this.UpdateProgress(0.0f);
+            }
+            else
+            {
+                this.UpdateProgress(1.0f);
+            }
+        }
+
+        protected abstract void UpdateProgress(float progress);
     }
 }

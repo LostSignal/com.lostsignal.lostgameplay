@@ -9,27 +9,14 @@ namespace Lost
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public class ActorManager : MonoBehaviour, IUpdate
+    public sealed class ActorManager : SingletonMonoBehaviour<ActorManager>, IName, IUpdate
     {
-        private static ActorManager instance;
         private Transform mainCameraTransform;
         private Vector3 mainPlayerPosition;
-        
-        public static ActorManager Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (instance == null)
-                {
-                    instance = SingletonUtil.CreateSingleton<ActorManager>("Actor Manager");
-                }
 
-                return instance;
-            }
-        }
+        public string Name => "Actor Manager";
 
-        public int Order => 0;
+        public int UpdateOrder => 0;
 
         public Vector3 MainPlayerPosition
         {

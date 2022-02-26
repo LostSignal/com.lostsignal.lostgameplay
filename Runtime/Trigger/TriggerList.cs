@@ -6,6 +6,7 @@
 
 namespace Lost
 {
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     public sealed class TriggerList : ProcessList<TriggerItem>
@@ -16,11 +17,15 @@ namespace Lost
         {
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void OnBeforeProcess()
         {
+            base.OnBeforeProcess();
+
             this.playerPosition = ActorManager.Instance.MainPlayerPosition;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void Process(ref TriggerItem item)
         {
             if (item.IsDynamic)

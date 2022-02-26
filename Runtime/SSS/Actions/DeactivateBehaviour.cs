@@ -22,7 +22,7 @@ namespace Lost.SSS
         {
         }
 
-        public override void StateUpdated(float progress)
+        protected override void UpdateProgress(float progress)
         {
             if (progress > 0.0f)
             {

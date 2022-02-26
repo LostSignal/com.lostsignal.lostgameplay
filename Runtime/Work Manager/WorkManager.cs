@@ -6,34 +6,19 @@
 
 namespace Lost
 {
-    using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public class WorkManager : MonoBehaviour, IAwake, IUpdate
+    public sealed class WorkManager : SingletonMonoBehaviour<WorkManager>, IName, IAwake, IUpdate
     {
-        private static WorkManager instance;
-
 #pragma warning disable 0649
         [SerializeField] private double maxRuntimeInMilliseconds = 0.5f;
 #pragma warning restore 0649
 
         private Queue<IWork> workQueue = new Queue<IWork>(1000);
 
-        public static WorkManager Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (instance == null)
-                {
-                    instance = SingletonUtil.CreateSingleton<WorkManager>("Work Manager");
-                }
+        public string Name => "Work Manager";
 
-                return instance;
-            }
-        }
-
-        public int Order => 3;
+        public int UpdateOrder => 3;
 
         public void OnAwake()
         {

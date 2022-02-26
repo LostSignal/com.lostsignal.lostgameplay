@@ -20,8 +20,11 @@ namespace Lost
         {
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void OnBeforeProcess()
         {
+            base.OnBeforeProcess();
+
             this.playerPosition = ActorManager.Instance.MainPlayerPosition;
         }
 

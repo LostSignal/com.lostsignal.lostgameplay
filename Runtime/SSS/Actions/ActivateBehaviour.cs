@@ -14,15 +14,25 @@ namespace Lost.SSS
     {
 #pragma warning disable 0649
         [SerializeField] private Behaviour[] targets;
+        
+        //// [HideInInspector]
+        //// [SerializeField] private bool[] initialStates;
 #pragma warning restore 0649
 
         public override string DisplayName => "Activate Behaviour";
 
         public override void StateStarted()
         {
+            //// if (this.targets?.Length > 0)
+            //// {
+            ////     for (int i = 0; i < this.targets.Length; i++)
+            ////     {
+            ////         this.initialStates[i] = this.targets[i].enabled;
+            ////     }
+            // }
         }
 
-        public override void StateUpdated(float progress)
+        protected override void UpdateProgress(float progress)
         {
             if (progress > 0.0f && this.targets?.Length > 0)
             {
@@ -35,6 +45,17 @@ namespace Lost.SSS
                 }
             }
         }
+
+        //// public override bool OnValidate()
+        //// {
+        ////     if (this.targets != null && (this.initialStates == null || this.initialStates.Length != this.targets.Length))
+        ////     {
+        ////         this.initialStates = new bool[this.targets.Length];
+        ////         return true;
+        ////     }
+        //// 
+        ////     return false;
+        //// }
     }
 }
 

@@ -10,30 +10,17 @@ namespace Lost
 {
     using UnityEngine;
 
-    public class PlayerProximityManager : MonoBehaviour, IUpdate
+    public sealed class PlayerProximityManager : SingletonMonoBehaviour<PlayerProximityManager>, IName, IUpdate
     {
-        private static PlayerProximityManager instance;
-
 #pragma warning disable 0649
         [SerializeField] private float runAllOverXSeconds = 0.5f;
 #pragma warning restore 0649
 
         private PlayerProximityList playerProximityList = new PlayerProximityList("Player Proximity List", 1000);
 
-        public static PlayerProximityManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = SingletonUtil.CreateSingleton<PlayerProximityManager>("Player Proximity Manager");
-                }
+        public string Name => "Player Proximity Manager";
 
-                return instance;
-            }
-        }
-
-        public int Order => 1;
+        public int UpdateOrder => 1;
 
         public void Register(PlayerProximity playerProximity)
         {

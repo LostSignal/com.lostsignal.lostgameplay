@@ -13,9 +13,6 @@ namespace Lost.SSS
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    ////
-    //// NOTE [bgish]: SSS has optimization to not update if not in view, or far away.  If mustUpdateEveryFrame is on though, that will be ignored.
-    ////
     [Serializable]
     public class State
     {
@@ -25,6 +22,8 @@ namespace Lost.SSS
         [SerializeField] private bool mustUpdateEveryFrame;
         [SerializeReference] private List<Action> actions;
 #pragma warning restore 0649
+
+        private bool isStateFinished;
 
         public string Name
         {
@@ -60,6 +59,32 @@ namespace Lost.SSS
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => this.actions = value;
+        }
+
+        public bool IsStateFinished 
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => this.isStateFinished;
+        }
+
+        public void StateStarted()
+        {
+            this.isStateFinished = false;
+
+            for (int i = 0; i < this.actions.Count; i++)
+            {
+                this.actions[i].StateStarted();
+            }
+        }
+
+        public void UpdateState(float deltaTime)
+        {
+            for (int i = 0; i < this.actions.Count; i++)
+            {
+                this.actions[i].Update(deltaTime);
+            }
+
+            this.isStateFinished = true;
         }
     }
 }

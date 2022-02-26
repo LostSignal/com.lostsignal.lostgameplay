@@ -27,7 +27,7 @@ namespace Lost.SSS
             this.hasUnityEventBeenCalled = false;
         }
 
-        public override void StateUpdated(float progress)
+        protected override void UpdateProgress(float progress)
         {
             if (progress > 0.0f && this.hasUnityEventBeenCalled == false)
             {

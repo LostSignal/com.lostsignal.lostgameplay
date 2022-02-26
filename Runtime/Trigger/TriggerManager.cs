@@ -6,30 +6,13 @@
 
 namespace Lost
 {
-    using System.Runtime.CompilerServices;
-    using UnityEngine;
-
-    public class TriggerManager : MonoBehaviour, IUpdate
+    public sealed class TriggerManager : SingletonMonoBehaviour<TriggerManager>, IName, IUpdate
     {
-        private static TriggerManager instance;
-
         private TriggerList triggers  = new TriggerList("Triggers", 100);
         
-        public static TriggerManager Instance
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                if (instance == null)
-                {
-                    instance = SingletonUtil.CreateSingleton<TriggerManager>("Trigger Manager");
-                }
-
-                return instance;
-            }
-        }
-
-        public int Order => 2;
+        public string Name => "Trigger Manager";
+        
+        public int UpdateOrder => 2;
 
         public void OnUpdate(float deltaTime)
         {

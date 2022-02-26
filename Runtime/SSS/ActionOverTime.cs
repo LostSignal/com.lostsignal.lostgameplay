@@ -71,7 +71,7 @@ namespace Lost.SSS
             this.end = this.endValue;
         }
 
-        public override void StateUpdated(float progress)
+        protected override void UpdateProgress(float progress)
         {
             if (progress < 0.0f)
             {
@@ -104,9 +104,9 @@ namespace Lost.SSS
             }
         }
 
-        public override void OnValidate()
+        public override bool OnValidate()
         {
-            base.OnValidate();
+            bool didDataChanged = false;
 
             // Making sure an animation curve exists
             if (this.animationCurve == null)
@@ -122,6 +122,8 @@ namespace Lost.SSS
                         time = 1,
                         value = 1
                     });
+
+                didDataChanged = true;
             }
 
             // Looking at the keys to get the duration
@@ -131,7 +133,10 @@ namespace Lost.SSS
             if (this.duration != animationCurveDuration)
             {
                 this.duration = animationCurveDuration;
+                didDataChanged = true;
             }
+
+            return didDataChanged;
         }
 
         public override float Duration
