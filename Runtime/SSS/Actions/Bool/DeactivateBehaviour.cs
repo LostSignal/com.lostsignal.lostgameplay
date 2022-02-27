@@ -16,7 +16,7 @@ namespace Lost.SSS
         public override string DisplayName => "Deactivate Behaviour";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override bool GetCurrentValue() => (this.Target != null) ? this.Target.enabled : false;
+        protected override bool GetCurrentValue() => this.Target.enabled;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool GetDesiredValue(float progress) => false;

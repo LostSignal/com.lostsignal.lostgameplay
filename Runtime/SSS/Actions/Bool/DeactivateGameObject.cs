@@ -16,7 +16,7 @@ namespace Lost.SSS
         public override string DisplayName => "Deactivate GameObject";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override bool GetCurrentValue() => (this.Target != null) ? this.Target.activeSelf : false;
+        protected override bool GetCurrentValue() => this.Target.activeSelf;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool GetDesiredValue(float progress) => false;

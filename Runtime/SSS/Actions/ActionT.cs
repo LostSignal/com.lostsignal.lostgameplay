@@ -13,11 +13,12 @@ namespace Lost.SSS
     public abstract class ActionT<TTarget, TValue> : Action
         where TTarget : class
     {
-#pragma warning disable 0649
-        [SerializeField] private TTarget target;
-#pragma warning restore 0649
+        private static readonly EqualityComparer<TValue> Comparer = EqualityComparer<TValue>.Default;
 
-        private EqualityComparer<TValue> comparer;
+        #pragma warning disable 0649
+        [SerializeField] private TTarget target;
+        #pragma warning restore 0649
+
         private TValue initialValue;
         private TValue currentValue;
 
@@ -44,11 +45,6 @@ namespace Lost.SSS
                 return;
             }
 
-            if (this.comparer == null)
-            {
-                this.comparer = EqualityComparer<TValue>.Default;
-            }
-
             this.initialValue = this.currentValue = this.GetCurrentValue();
         }
 
@@ -61,7 +57,7 @@ namespace Lost.SSS
 
             var desiredValue = progress > 0.0f ? this.GetDesiredValue(progress) : this.initialValue;
             
-            if (this.comparer.Equals(this.currentValue, desiredValue) == false)
+            if (Comparer.Equals(this.currentValue, desiredValue) == false)
             {
                 this.currentValue = desiredValue;
                 this.SetValue(this.currentValue);
