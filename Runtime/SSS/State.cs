@@ -23,6 +23,8 @@ namespace Lost.SSS
         [SerializeReference] private List<Action> actions;
 #pragma warning restore 0649
 
+        private float currentTime;
+        private float stateDuration;
         private bool isStateFinished;
 
         public string Name
@@ -69,22 +71,42 @@ namespace Lost.SSS
 
         public void StateStarted()
         {
+            this.currentTime = 0.0f;
             this.isStateFinished = false;
 
             for (int i = 0; i < this.actions.Count; i++)
             {
                 this.actions[i].StateStarted();
+                this.stateDuration = this.actions[i].TotalTime;
             }
         }
 
         public void UpdateState(float deltaTime)
         {
-            for (int i = 0; i < this.actions.Count; i++)
+            this.currentTime += deltaTime;
+
+            if (this.repeat)
             {
-                this.actions[i].Update(deltaTime);
+                while (this.currentTime > this.stateDuration)
+                {
+                    this.currentTime -= this.stateDuration;
+                }
             }
 
-            this.isStateFinished = true;
+            bool haveAllActionsFinshed = true;
+
+            for (int i = 0; i < this.actions.Count; i++)
+            {
+                if (this.actions[i].Update(this.currentTime) == false)
+                {
+                    haveAllActionsFinshed = false;
+                }
+            }
+
+            if (this.repeat == false && haveAllActionsFinshed)
+            {
+                this.isStateFinished = true;
+            }
         }
     }
 }

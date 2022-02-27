@@ -21,11 +21,47 @@ namespace Lost.SSS
 
         private TValue initialValue;
         private TValue currentValue;
+        private bool isTargetValid;
 
         protected TTarget Target
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => this.target;
+        }
+
+        protected TValue InitialValue
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => this.initialValue;
+        }
+
+        public override void StateStarted()
+        {
+            this.isTargetValid = this.target != null;
+
+            if (this.isTargetValid == false)
+            {
+                Debug.LogWarning($"SSS Action \"{this.Description}\" has a null target!");
+                return;
+            }
+
+            this.initialValue = this.currentValue = this.GetCurrentValue();
+        }
+
+        protected override void UpdateProgress(float currentTime)
+        {
+            if (this.isTargetValid == false)
+            {
+                return;
+            }
+
+            var desiredValue = currentTime > 0.0f ? this.GetDesiredValue(currentTime) : this.initialValue;
+
+            if (Comparer.Equals(this.currentValue, desiredValue) == false)
+            {
+                this.currentValue = desiredValue;
+                this.SetValue(this.currentValue);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -36,32 +72,5 @@ namespace Lost.SSS
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected abstract void SetValue(TValue newValue);
-
-        public override void StateStarted()
-        {
-            if (this.target == null)
-            {
-                Debug.LogWarning($"SSS Action \"{this.Description}\" has a null target!");
-                return;
-            }
-
-            this.initialValue = this.currentValue = this.GetCurrentValue();
-        }
-
-        protected override void UpdateProgress(float progress)
-        {
-            if (this.target == null)
-            {
-                return;
-            }
-
-            var desiredValue = progress > 0.0f ? this.GetDesiredValue(progress) : this.initialValue;
-            
-            if (Comparer.Equals(this.currentValue, desiredValue) == false)
-            {
-                this.currentValue = desiredValue;
-                this.SetValue(this.currentValue);
-            }
-        }
     }
 }
