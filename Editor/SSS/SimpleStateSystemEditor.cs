@@ -136,7 +136,10 @@ namespace Lost.SSS
 
                 if (GUILayout.Button("+", GUILayout.Width(50), GUILayout.Height(18)))
                 {
-                    actionsProperty.AddElementToArray(state.Actions, Activator.CreateInstance(ActionTypes[selectedActionIndex]) as Action);
+                    var action = Activator.CreateInstance(ActionTypes[selectedActionIndex]) as Action;
+                    action.Initialize();
+
+                    actionsProperty.AddElementToArray(state.Actions, action);
                 }
             }
         }

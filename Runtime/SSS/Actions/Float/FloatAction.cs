@@ -17,6 +17,12 @@ namespace Lost.SSS
         [SerializeField] private AnimationCurve curve;
         #pragma warning restore 0649
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.curve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override float GetDesiredValue(float progress)
         {

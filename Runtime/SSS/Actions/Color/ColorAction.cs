@@ -15,7 +15,13 @@ namespace Lost.SSS
         #pragma warning disable 0649
         [SerializeField] private Color endValue;
         [SerializeField] private AnimationCurve curve;
-        #pragma warning restore 0649
+#pragma warning restore 0649
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.curve = AnimationCurve.Linear(0.0f, 0.0f, 1.0f, 1.0f);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override Color GetDesiredValue(float progress)

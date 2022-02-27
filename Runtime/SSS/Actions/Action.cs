@@ -46,6 +46,10 @@ namespace Lost.SSS
             return false;
         }
 
+        public virtual void Initialize()
+        {
+        }
+
         public abstract void StateStarted();
 
         public virtual bool Update(float currentTime)

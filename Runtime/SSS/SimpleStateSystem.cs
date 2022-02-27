@@ -203,7 +203,10 @@ namespace Lost
                     }
                     else
                     {
-                        Debug.LogError($"SimpleStateSystem {this.name} has null Action", this);
+                        if (Application.isPlaying)
+                        {
+                            Debug.LogError($"SimpleStateSystem {this.name} has null Action", this);
+                        }
                     }
                 }
 
