@@ -2,7 +2,10 @@
     "name": "LostGameplay",
     "rootNamespace": "",
     "references": [
-        "GUID:8e683a3d6d1f7a74da811ef5727a2526"
+        "GUID:8e683a3d6d1f7a74da811ef5727a2526",
+        "GUID:21b0c8d1703a94250bfac916590cea4f",
+        "GUID:ea715009a4efd4c6cbc85be3ae097dd3",
+        "GUID:315d634a9ac6d460a9515f5a56be6311"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -16,6 +19,11 @@
             "name": "Unity",
             "expression": "0.0.0",
             "define": "UNITY"
+        },
+        {
+            "name": "com.unity.visualscripting",
+            "expression": "0.0.0",
+            "define": "USING_UNITY_VISUAL_SCRIPTING"
         }
     ],
     "noEngineReferences": false
