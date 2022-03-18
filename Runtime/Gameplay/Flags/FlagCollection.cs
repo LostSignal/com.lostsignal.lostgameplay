@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FlagCollection.cs" company="Lost Signal LLC">
 //     Copyright (c) Lost Signal LLC. All rights reserved.
 // </copyright>
@@ -25,6 +25,7 @@ namespace Lost
         [SerializeField] private BitArray flagBits;
 #pragma warning restore 0649
 
+        private DataStore dataStore;
         private string dataStoreKeyName;
         private bool isInitialized;
         private Action flagsChanged;
@@ -59,7 +60,13 @@ namespace Lost
         public void SetFlag(int flagId)
         {
             this.AssertInitialized(flagId);
-            this.flagBits.SetBit(flagId);
+            
+            if (this.flagBits.IsBitSet(flagId) == false)
+            {
+                this.flagBits.SetBit(flagId);
+                this.flagsChanged?.Invoke();
+                this.SaveFlags();
+            }
         }
 
         public bool IsFlagSet(int flagId)
@@ -95,23 +102,33 @@ namespace Lost
                 return;
             }
 
-            IDataManager dataManager = null;
+            var location = this.location == Location.PlayerData ? DataStoreLocation.Player :
+                           this.location == Location.GameData ? DataStoreLocation.Game :
+                           throw new NotImplementedException();
 
-            if (this.location == Location.PlayerData && PlayerDataManager.IsInitialized)
-            {
-                dataManager = PlayerDataManager.Instance;
-            }
-            else if (this.location == Location.GameData && GameDataManager.IsInitialized)
-            {
-                dataManager = GameDataManager.Instance;
-            }
+            this.dataStore = DataStoreManager.Instance.GetDataStore(location);
 
-            if (dataManager != null && dataManager.DataStore != null)
+            //// TODO [bgish]: Register for changes
+            //// this.dataStore.OnDataStoreChanged += this.UpdateFlagBits;
+
+            this.UpdateFlagBits();
+            
+            this.isInitialized = true;
+        }
+
+        private void UpdateFlagBits()
+        {
+            var flagBits = this.dataStore.GetByteArray(this.DataStoreKeyName, null);
+
+            if (flagBits != null)
             {
-                this.isInitialized = true;
-                var flagBits = dataManager.DataStore.GetByteArray(this.DataStoreKeyName, null);
                 this.flagBits.SetBits(flagBits);
             }
+        }
+
+        private void SaveFlags()
+        {
+            this.dataStore.SetByteArray(this.DataStoreKeyName, this.flagBits.ToArray());
         }
 
         private void AssertInitialized(int flagId)
