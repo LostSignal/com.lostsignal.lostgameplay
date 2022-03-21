@@ -6,7 +6,9 @@
         "GUID:21b0c8d1703a94250bfac916590cea4f",
         "GUID:ea715009a4efd4c6cbc85be3ae097dd3",
         "GUID:315d634a9ac6d460a9515f5a56be6311",
-        "GUID:c2c4797f08fb0e049af551d9a49e63e3"
+        "GUID:c2c4797f08fb0e049af551d9a49e63e3",
+        "GUID:c924ffb8a92709d4ea02d42a35d3786c",
+        "GUID:61106e8dfb7a4e64a96af0eccfe1209f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -30,6 +32,11 @@
             "name": "com.revenantx.litenetlib",
             "expression": "0.0.0",
             "define": "USING_LITE_NET_LIB"
+        },
+        {
+            "name": "com.placeholder-software.dissonance",
+            "expression": "0.0.0",
+            "define": "USING_DISSONANCE"
         }
     ],
     "noEngineReferences": false

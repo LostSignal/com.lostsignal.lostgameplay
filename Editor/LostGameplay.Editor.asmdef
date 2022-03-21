@@ -5,7 +5,10 @@
         "GUID:5d1c6bed32d6262429a7da8233a5b65b",
         "GUID:8e683a3d6d1f7a74da811ef5727a2526",
         "GUID:9c9eac44720c8e148964962a0bc81f19",
-        "GUID:21b0c8d1703a94250bfac916590cea4f"
+        "GUID:21b0c8d1703a94250bfac916590cea4f",
+        "GUID:c924ffb8a92709d4ea02d42a35d3786c",
+        "GUID:61106e8dfb7a4e64a96af0eccfe1209f",
+        "GUID:e9244de365e87924c955165fd5894cf4"
     ],
     "includePlatforms": [
         "Editor"
@@ -26,6 +29,11 @@
             "name": "com.unity.visualscripting",
             "expression": "0.0.0",
             "define": "USING_UNITY_VISUAL_SCRIPTING"
+        },
+        {
+            "name": "com.placeholder-software.dissonance",
+            "expression": "0.0.0",
+            "define": "USING_DISSONANCE"
         }
     ],
     "noEngineReferences": false
