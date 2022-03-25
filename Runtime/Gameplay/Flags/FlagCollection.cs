@@ -18,14 +18,13 @@ namespace Lost
         public static readonly ObjectTracker<FlagCollection> ActiveCollections = new ObjectTracker<FlagCollection>(20);
 
 #pragma warning disable 0649
-        [SerializeField] private Location location;
+        [SerializeField] private DataStoreObject dataStore;
         [SerializeField] private List<Flag> flags;
 
         [HideInInspector]
         [SerializeField] private BitArray flagBits;
 #pragma warning restore 0649
 
-        private DataStore dataStore;
         private string dataStoreKeyName;
         private bool isInitialized;
         private Action flagsChanged;
@@ -102,12 +101,6 @@ namespace Lost
                 return;
             }
 
-            var location = this.location == Location.PlayerData ? DataStoreLocation.Player :
-                           this.location == Location.GameData ? DataStoreLocation.Game :
-                           throw new NotImplementedException();
-
-            this.dataStore = DataStoreManager.Instance.GetDataStore(location);
-
             //// TODO [bgish]: Register for changes
             //// this.dataStore.OnDataStoreChanged += this.UpdateFlagBits;
 
@@ -118,7 +111,7 @@ namespace Lost
 
         private void UpdateFlagBits()
         {
-            var flagBits = this.dataStore.GetByteArray(this.DataStoreKeyName, null);
+            var flagBits = this.dataStore.DataStore.GetByteArray(this.DataStoreKeyName, null);
 
             if (flagBits != null)
             {
@@ -128,7 +121,7 @@ namespace Lost
 
         private void SaveFlags()
         {
-            this.dataStore.SetByteArray(this.DataStoreKeyName, this.flagBits.ToArray());
+            this.dataStore.DataStore.SetByteArray(this.DataStoreKeyName, this.flagBits.ToArray());
         }
 
         private void AssertInitialized(int flagId)
@@ -139,7 +132,7 @@ namespace Lost
 
                 if (this.isInitialized == false)
                 {
-                    Debug.LogError($"FlagCollection {this.name} tried to set flag {flagId} before {this.location} was available.");
+                    Debug.LogError($"FlagCollection {this.name} tried to set flag {flagId} before {this.dataStore.name} was available.");
                     return;
                 }
             }
