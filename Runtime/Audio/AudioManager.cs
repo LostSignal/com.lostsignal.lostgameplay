@@ -43,15 +43,28 @@ namespace Lost
 
         public void Play(AudioBlock audioBlock)
         {
-            this.Play(audioBlock, Vector3.zero, false);
+            this.Play(audioBlock, null, Vector3.zero, false);
         }
 
         public void Play(AudioBlock audioBlock, Vector3 position)
         {
-            this.Play(audioBlock, position, true);
+            this.Play(audioBlock, null, position, true);
         }
 
-        public void Play(AudioBlock audioBlock, Vector3 position, bool usePosition)
+        public void Play(AudioBlock audioBlock, Transform transform)
+        {
+            this.Play(audioBlock, transform, transform.position, true);
+        }
+
+        public void SaveAudioSettings()
+        {
+            foreach (var audioChannel in this.audioChannels)
+            {
+                audioChannel.Save();
+            }
+        }
+
+        private void Play(AudioBlock audioBlock, Transform parent, Vector3 position, bool isPositionalAudio)
         {
             AudioChannel channel = audioBlock.AudioChannel;
 
@@ -73,21 +86,38 @@ namespace Lost
             }
 
             AudioSource audioSource = this.GetAudioSource();
-            audioSource.gameObject.SetActive(true);
-            audioSource.transform.position = position;
-            audioSource.spatialBlend = usePosition ? 1.0f : 0.0f;
+
+            // Setting up parenting / positioning
+            if (parent != null)
+            {
+                audioSource.transform.SetParent(parent);
+                audioSource.transform.Reset();
+            }
+            else
+            {
+                if (isPositionalAudio)
+                {
+                    audioSource.transform.SetParent(null);
+                    audioSource.transform.position = position;
+                }
+                else
+                {
+                    audioSource.transform.SetParent(CameraManager.Instance.CameraState.Transform);
+                    audioSource.transform.Reset();
+                }
+            }
+
+            audioSource.spatialBlend = isPositionalAudio ? 1.0f : 0.0f;
             audioSource.clip = audioBlock.GetAudioClip();
             audioSource.pitch = audioBlock.GetPitch();
             audioSource.volume = audioBlock.GetVolume() * channel.Volume;
-            audioSource.Play();
-        }
 
-        public void SaveAudioSettings()
-        {
-            foreach (var audioChannel in this.audioChannels)
-            {
-                audioChannel.Save();
-            }
+            // Making sure it's all enabled
+            audioSource.gameObject.SetActive(true);
+            audioSource.enabled = true;
+
+            // We're done! Play!
+            audioSource.Play();
         }
 
         //// TODO [bgish]: This can be highly optimized.  Picking up where we last left off, or having
