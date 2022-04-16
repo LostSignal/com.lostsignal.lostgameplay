@@ -8,11 +8,12 @@
 
 namespace Lost
 {
+    using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
 
     [RequireComponent(typeof(Button))]
-    public class PlayAudioBlockOnButtonClick : MonoBehaviour
+    public class PlayAudioBlockOnButtonClick : MonoBehaviour, IValidate, IAwake
     {
 #pragma warning disable 0649
         [SerializeField] private AudioBlock audioBlock;
@@ -22,22 +23,22 @@ namespace Lost
         [SerializeField] private Button button;
 #pragma warning restore 0649
 
-        private void OnValidate()
+        public void Validate(List<ValidationError> errors)
         {
-            this.AssertGetComponent(ref this.button);
+            this.AssertNotNull(errors, this.audioBlock, nameof(this.audioBlock));
         }
 
-        private void Awake()
+        public void OnAwake()
         {
-            this.OnValidate();
-
-            if (this.audioBlock == null)
-            {
-                Debug.LogError($"Button {this.gameObject.name} does not have an Audio Block!", this);
-            }
-
             this.button.onClick.AddListener(this.OnButtonClicked);
         }
+
+        private void OnValidate()
+        {
+            EditorUtil.SetIfNull(this, ref this.button);
+        }
+
+        private void Awake() => ActivationManager.Register(this);
 
         private void OnButtonClicked()
         {
@@ -45,8 +46,7 @@ namespace Lost
             {
                 return;
             }
-
-            if (this.playSoundFromButtonPosition)
+            else if (this.playSoundFromButtonPosition)
             {
                 this.audioBlock.Play(this.button.transform.position);
             }

@@ -108,7 +108,7 @@ namespace Lost.Networking
 
                 if (networkIdentity == null)
                 {
-                    networkIdentity = this.GetOrAddComponent<NetworkIdentity>();
+                    networkIdentity = EditorUtil.GetOrAddComponent<NetworkIdentity>(this);
                 }
 
                 networkIdentity.EditorOnlyAddBehaviour(this);

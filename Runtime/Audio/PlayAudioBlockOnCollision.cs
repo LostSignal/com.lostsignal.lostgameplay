@@ -8,28 +8,33 @@
 
 namespace Lost
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
-    public class PlayAudioBlockOnCollision : MonoBehaviour
+    public class PlayAudioBlockOnCollision : MonoBehaviour, IValidate, IAwake
     {
 #pragma warning disable 0649
         [SerializeField] private AudioBlock audioBlock;
         [SerializeField] private float delayToPlayOnAwake = 0.5f;
         [SerializeField] private float playAudioBlockCooldown = 0.2f;
-        [SerializeField] private LayerMask layerFilter = 0;
+        [SerializeField] private LayerMask layerFilter = ~0;
 #pragma warning restore 0649
 
         private float minimumNextPlayTime;
+        private bool isReady;
 
-        private void Awake()
+        public void Validate(List<ValidationError> errors)
         {
-            this.minimumNextPlayTime = Time.time + this.delayToPlayOnAwake;
-
-            if (this.audioBlock == null)
-            {
-                Debug.LogError($"GameObject {this.gameObject.name} does not have an Audio Block!", this);
-            }
+            this.AssertNotNull(errors, this.audioBlock, nameof(this.audioBlock));
         }
+
+        public void OnAwake()
+        {
+            this.isReady = true;
+            this.minimumNextPlayTime = Time.time + this.delayToPlayOnAwake;
+        }
+
+        private void Awake() => ActivationManager.Register(this);
 
         private void OnCollisionEnter(Collision other)
         {
@@ -49,7 +54,7 @@ namespace Lost
             }
 
             // Making sure we haven't played too recently
-            if (Time.time < this.minimumNextPlayTime)
+            if (this.isReady == false || Time.time < this.minimumNextPlayTime)
             {
                 return;
             }

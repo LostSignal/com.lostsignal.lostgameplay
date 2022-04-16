@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="ActivateBehaviour.cs" company="Lost Signal LLC">
+// <copyright file="EnableBehaviour.cs" company="Lost Signal LLC">
 //     Copyright (c) Lost Signal LLC. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -11,9 +11,9 @@ namespace Lost.SSS
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public sealed class ActivateBehaviour : ActionT<Behaviour, bool>
+    public sealed class EnableBehaviour : ActionT<Behaviour, bool>
     {
-        public override string DisplayName => "Activate Behaviour";
+        public override string DisplayName => "Enable Behaviour";
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool GetCurrentValue() => this.Target.enabled;

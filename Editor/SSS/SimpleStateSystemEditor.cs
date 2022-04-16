@@ -201,7 +201,7 @@ namespace Lost.SSS
                     propertyProcessed = prop.propertyPath;
                 }
 
-                using (new IndentLevelScope(isFirstProperty || prop.isArray == false ? 0 : 1))
+                using (new IndentLevelScope(isFirstProperty || prop.propertyType == SerializedPropertyType.String || prop.isArray == false ? 0 : 1))
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.PropertyField(prop, true);
