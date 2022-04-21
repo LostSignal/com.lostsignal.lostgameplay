@@ -16,6 +16,11 @@ namespace Lost
     {
         private static readonly Dictionary<int, Damageable> DamangeableColliders = new Dictionary<int, Damageable>();
 
+        static Damageable()
+        {
+            Platform.OnReset += DamangeableColliders.Clear;
+        }
+
 #pragma warning disable 0649
         [Tooltip("The Health component this component applies damage to.")]
         [SerializeField] private Health health;
@@ -76,6 +81,7 @@ namespace Lost
             if (this.colliders == null)
             {
                 this.colliders = new List<Collider>();
+                EditorUtil.SetDirty(this);
             }
         }
 
