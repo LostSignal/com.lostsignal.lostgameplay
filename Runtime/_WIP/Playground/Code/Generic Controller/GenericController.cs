@@ -45,13 +45,13 @@ namespace Lost
         FixedCamera,
     }
 
-    public class GenericController : MonoBehaviour, IOnManagersReady
+    public class GenericController : MonoBehaviour, IAwake
     {
         private const float threshold = 0.01f;
 
-        #pragma warning disable 0649
+#pragma warning disable 0649
         [SerializeField] private GenericControllerSettings settings;
-        
+
         [Header("References")]
         [SerializeField] private Camera characterCamera;
         [SerializeField] private CharacterController characterController;
@@ -66,7 +66,7 @@ namespace Lost
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
         [SerializeField] private bool isGrounded = true;
-        #pragma warning restore 0649
+#pragma warning restore 0649
 
         private IController[] controllers;
         private IController currentController;
@@ -123,7 +123,7 @@ namespace Lost
             this.UpdateSelectedController((this.currentControllerIndex + 1) % this.controllers.Length);
         }
 
-        public void OnManagersReady()
+        public void OnAwake()
         {
             // Assigning Animation IDs
             this.animIDSpeed = Animator.StringToHash("Speed");
@@ -157,7 +157,7 @@ namespace Lost
             // UpdateManager.Instance.GetChannel("GenericController.LateUpdate").RegisterCallback(this, this);
         }
 
-        private void Awake() => ManagersReady.Register(this);
+        private void Awake() => ActivationManager.Register(this);
 
         private void Update()
         {
@@ -224,7 +224,7 @@ namespace Lost
 
             // NOTE: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
-            if (this.input.move == Vector2.zero) 
+            if (this.input.move == Vector2.zero)
             {
                 targetSpeed = 0.0f;
             }
@@ -268,7 +268,7 @@ namespace Lost
                 // Update animator if using character
                 this.characterAnimator.SetBool(this.animIDJump, false);
                 this.characterAnimator.SetBool(this.animIDFreeFall, false);
-            
+
                 // Stop our velocity dropping infinitely when grounded
                 if (this.verticalVelocity < 0.0f)
                 {
@@ -320,12 +320,12 @@ namespace Lost
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
-            if (lfAngle < -360f) 
+            if (lfAngle < -360f)
             {
                 lfAngle += 360f;
             }
 
-            if (lfAngle > 360f) 
+            if (lfAngle > 360f)
             {
                 lfAngle -= 360f;
             }
@@ -341,7 +341,7 @@ namespace Lost
             Gizmos.color = this.isGrounded ? transparentGreen : transparentRed;
 
             // When selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-            if  (this.characterTransform != null)
+            if (this.characterTransform != null)
             {
                 Vector3 position = this.characterTransform.position;
                 Gizmos.DrawSphere(new Vector3(position.x, position.y - this.settings.GroundedOffset, position.z), this.settings.GroundedRadius);
@@ -355,11 +355,11 @@ namespace Lost
             [Tooltip("How fast the character turns to face movement direction")]
             [Range(0.0f, 0.3f)]
             [SerializeField] private float rotationSmoothTime = 0.12f;
-                        
+
             [Header("Cinemachine")]
             [Tooltip("The Cinemachine Virtual Camera this controller uses.")]
             [SerializeField] private GameObject cinemachineCamera;
-            
+
             [Tooltip("The Cinemachine Virtual Camera this controller uses for aiming.")]
             [SerializeField] private GameObject cinemachineAimCamera;
 
@@ -478,7 +478,7 @@ namespace Lost
             {
                 Vector3 shootPosition = this.shootTraransform.position;
                 Vector3 aimTargetPosition = this.aimTargetTraransform.position;
-                Quaternion rotation = Quaternion.LookRotation((aimTargetPosition - shootPosition).normalized,  Vector3.up);
+                Quaternion rotation = Quaternion.LookRotation((aimTargetPosition - shootPosition).normalized, Vector3.up);
 
                 var bulletProjectile = GameObject.Instantiate(this.bulletProjectilePrefab, shootPosition, rotation);
                 bulletProjectile.Shoot();
@@ -650,10 +650,10 @@ namespace Lost
 
             [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
             [SerializeField] private GameObject cinemachineCameraTarget;
-            
+
             [Tooltip("How far in degrees can you move the camera up")]
             [SerializeField] private float topClamp = 70.0f;
-            
+
             [Tooltip("How far in degrees can you move the camera down")]
             [SerializeField] private float bottomClamp = -30.0f;
 

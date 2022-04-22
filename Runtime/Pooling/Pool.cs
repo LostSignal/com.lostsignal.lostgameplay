@@ -12,7 +12,7 @@ namespace Lost
     using System.Runtime.CompilerServices;
     using UnityEngine;
 
-    public class Pool : MonoBehaviour, IOnManagersReady
+    public class Pool : MonoBehaviour, IAwake
     {
 #pragma warning disable 0649
         [SerializeField] private GameObject prefab;
@@ -31,7 +31,7 @@ namespace Lost
             get => this.pooId;
         }
 
-        public void OnManagersReady()
+        public void OnAwake()
         {
             Debug.Assert(this.prefab != null, "Give good notification", this);
             Debug.Assert(this.initialCapacity > 0, "Give good notification", this);
@@ -95,18 +95,18 @@ namespace Lost
 
         internal void ReturnToPooledObject(PooledObject pooledObject)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (this.pooledGameObjects.Contains(pooledObject.gameObject))
             {
                 Debug.LogError($"Pooled Object {pooledObject.name} has already been returned to the pool.  There is a bug!", pooledObject);
                 return;
             }
-            #endif
+#endif
 
             this.pooledGameObjects.Add(pooledObject.gameObject);
         }
 
-        private void Awake() => ManagersReady.Register(this);
+        private void Awake() => ActivationManager.Register(this);
 
         private void OnDestroy()
         {
@@ -116,7 +116,7 @@ namespace Lost
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private void OnValidate()
         {
@@ -158,7 +158,7 @@ namespace Lost
             }
         }
 
-        #endif
+#endif
     }
 }
 
